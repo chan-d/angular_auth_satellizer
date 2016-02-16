@@ -1,7 +1,8 @@
 angular
   .module('AuthSampleApp', [
-    'ui.router'
+    'ui.router',
     // TODO #2: Add satellizer module
+    'satellizer'    
   ])
   .controller('MainController', MainController)
   .controller('HomeController', HomeController)
