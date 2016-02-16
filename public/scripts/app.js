@@ -72,7 +72,7 @@ function configRoutes($stateProvider, $urlRouterProvider, $locationProvider) {
       resolve: {
         loginRequired: loginRequired
       }
-    })
+    });
 
 
     function skipIfLoggedIn($q, $auth) {
@@ -107,7 +107,7 @@ function MainController (Account) {
 
   vm.currentUser = function() {
    return Account.currentUser();
-  }
+  };
 
 }
 
@@ -136,14 +136,14 @@ function LoginController (Account) {
          vm.new_use = {};
          // TODO #5: redirect to '/profile'
          $location.path('/profile');
-      })
+      });
   };
 }
 
 
 
-SignupController.$inject = []; // minification protection
-function SignupController () {
+SignupController.$inject = ["$location", "Account"]; // minification protection
+function SignupController ($location, Account) {
   var vm = this;
   vm.new_user = {}; // form data
 
@@ -151,7 +151,9 @@ function SignupController () {
     Account
       .signup(vm.new_user)
       .then(
-        function (response) {
+        function(response) {
+          vm.new_user= {};
+          $location.path('/profile');
           // TODO #9: clear sign up form
           // TODO #10: redirect to '/profile'
         }
@@ -161,7 +163,7 @@ function SignupController () {
 
 LogoutController.$inject = ["Account"]; // minification protection
 function LogoutController (Account) {
-  Account.logout()
+  Account.logout();
   // TODO #7: when the logout succeeds, redirect to the login page
   $location.path('/login');
 }
@@ -195,6 +197,18 @@ function Account($http, $q, $auth) {
   self.updateProfile = updateProfile;
 
   function signup(userData) {
+    return (
+    $auth
+        .signup(userData)
+        .then(
+          function onSuccess(response) {
+            $auth.setToken(response.data.token);
+          },
+          function onError(error) {
+            console.error(error);
+          }
+        )
+      );
       // TODO #8: signup (https://github.com/sahat/satellizer#authsignupuser-options)
       // then, set the token (https://github.com/sahat/satellizer#authsettokentoken)
       // returns a promise
@@ -227,8 +241,8 @@ function Account($http, $q, $auth) {
       .logout()
       .then(function() {
         self.user = null;
+  });
   }
-
   function currentUser() {
     if ( self.user ) { return self.user; }
     if ( !$auth.isAuthenticated() ) { return null; }
@@ -267,5 +281,5 @@ function Account($http, $q, $auth) {
     );
   }
 
-
 }
+
