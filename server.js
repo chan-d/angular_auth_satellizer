@@ -52,19 +52,17 @@ app.put('/api/me', auth.ensureAuthenticated, function (req, res) {
 });
 
 app.get('/api/posts', function (req, res) {
-  res.json([
-  {
-    title: "Hardcoded Title",
-    content: "Here is some great hardcoded content for the body of a blog post. Happy coding!"
-  },
-  {
-    title: "Another Post",
-    content: "MEAN stack is the best stack."
-  }
-  ]);
+  Post.find({}, function(error, posts) {
+    if (error) { return console.log(error);}
+    else {
+      res.json(posts);
+    }
+
+  })
 });
 
 app.post('/api/posts', function(req, res) {
+  console.log(req.body);
   var post = new Post({
     title: req.body.title,
     content: req.body.content
@@ -74,8 +72,17 @@ app.post('/api/posts', function(req, res) {
       if (err) {
         res.send({message: err.message});
       }
+      console.log(post);
       res.json(post);
     } 
+  });
+  User.findById(req.body.user_id,function (err, user) {
+    if (err) { return console.log(err);}
+    else {
+      user.posts.push(post._id);
+      user.save(function(err) {
+      });
+    }
   });
 });
 /*
