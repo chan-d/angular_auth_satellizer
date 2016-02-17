@@ -111,11 +111,11 @@ function MainController (Account) {
 
 }
 
-HomeController.$inject = ["$http"]; // minification protection
-function HomeController ($http) {
+HomeController.$inject = ["$http", "Account"]; // minification protection
+function HomeController ($http, Account) {
   var vm = this;
   vm.posts = [];
-  vm.new_post = {}; // form data
+  vm.new_post = {user_id: Account.currentUser()._id}; // form data
 
   $http.get('/api/posts')
     .then(function (response) {
@@ -126,7 +126,7 @@ function HomeController ($http) {
     $http.post('/api/posts', vm.new_post)
       .then(function(response){
         vm.posts.push(response.data);
-        vm.new_post= {};
+        vm.new_post= {user_id: Account.currentUser()._id};
       });
   };
 
