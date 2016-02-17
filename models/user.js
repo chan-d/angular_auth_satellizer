@@ -10,6 +10,7 @@ var userSchema = new Schema({
   displayName: String,
   // TODO #12
   username: { type: String },
+  posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
   picture: String
 });
 

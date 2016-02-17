@@ -121,10 +121,19 @@ function HomeController ($http) {
     .then(function (response) {
       vm.posts = response.data;
     });
+
+  vm.createPost = function() {
+    $http.post('/api/posts', vm.new_post)
+      .then(function(response){
+        vm.posts.push(response.data);
+        vm.new_post= {};
+      });
+  };
+
 }
 
-LoginController.$inject = ["Account"]; // minification protection
-function LoginController (Account) {
+LoginController.$inject = ["$location", "Account"]; // minification protection
+function LoginController ($location, Account) {
   var vm = this;
   vm.new_user = {}; // form data
 
@@ -161,8 +170,8 @@ function SignupController ($location, Account) {
   };
 }
 
-LogoutController.$inject = ["Account"]; // minification protection
-function LogoutController (Account) {
+LogoutController.$inject = ["$location", "Account"]; // minification protection
+function LogoutController ($location, Account) {
   Account.logout();
   // TODO #7: when the logout succeeds, redirect to the login page
   $location.path('/login');
@@ -180,8 +189,8 @@ function ProfileController ($location, Account) {
     .then(
       function(response) {
       vm.new_profile = {};
-      vm.showEditForm=false;
-    })
+      vm.showEditForm = false;
+    });
     // TODO #14: Submit the form using the relevant `Account` method
     // On success, clear the form
   };
@@ -224,7 +233,7 @@ function Account($http, $q, $auth) {
   function login(userData) {
     return (
       $auth
-        .satellizerLogin(userData) // login (https://github.com/sahat/satellizer#authloginuser-options)
+        .login(userData) // login (https://github.com/sahat/satellizer#authloginuser-options)
         .then(
           function onSuccess(response) {
             //TODO #3: set token (https://github.com/sahat/satellizer#authsettokentoken)
@@ -266,7 +275,7 @@ function Account($http, $q, $auth) {
         self.user = null;
         deferred.reject();
       }
-    )
+    );
     self.user = promise = deferred.promise;
     return promise;
 

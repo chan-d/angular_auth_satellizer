@@ -12,5 +12,19 @@
 	<br>
 	<h4>Add New Post</h4>
 	<hr>
+
+	
 	<!-- TODO #15: Post Form here -->
+
+	<form ng-show="main.currentUser()" ng-submit="home.createPost()">
+		<div class="form-group">
+		  <label for="post-title">Title</label>
+		  <input type="text" ng-model="home.new_post.title" class="form-control" id="post-title" placeholder="Post Title">
+		</div>
+	<div class="form-group">
+		  <label for="post-content">Content</label>
+		  <textarea ng-model="home.new_post.content" class="form-control" id="post-content" placeholder="Your thoughts?"> </textarea>
+	</div>
+	<input type="submit" value="Post" class="btn btn-block btn-info">
+	</form>
 </div>
