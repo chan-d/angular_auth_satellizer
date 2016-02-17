@@ -8,4 +8,18 @@
 <hr>
 <a href="#" ng-click="profile.showEditForm=true" ng-hide="profile.showEditForm" class="btn btn-default"><i class="fa fa-pencil"></i> Edit Profile</a>
 
+<form ng-show="profile.showEditForm" ng-submit="profile.updateProfile()">
+  <div class="form-group">
+    <input type="text" ng-model="profile.new_profile.displayName" class="form-control" ng-value="main.currentUser().displayName">
+  </div>
+  <!-- TODO #11 -->
+  <div class="form-group">
+    <input type="text" ng-model="profile.new_profile.username" class="form-control" ng-value="main.currentUser().username">
+  </div>  
+  <div class="form-group">
+    <input type="text" ng-model="profile.new_profile.email" class="form-control" ng-value="main.currentUser().email">
+  </div>
+  <input type="submit" value="Update" class="btn btn-block btn-info">
+</form>
+
 <!-- TODO #14 -->
